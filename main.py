@@ -1,56 +1,100 @@
 from tkinter import *
+from time import *
+from math import *
 root = Tk()
+root.geometry('420x420')
+root.config(bg='white')
+root.minsize(width=420, height=420)
 
-c = Canvas(root, width=300, height=300, bg='white')
-c.pack()
+root.columnconfigure(0, weight=1)
+root.rowconfigure(0, weight=1)
 
-c.create_rectangle(10, 10, 290, 290,
-                   width=3)
-c.create_rectangle(20, 20, 280, 280,
-                   width=3)
-c.create_oval(20, 20, 280, 280,
-              width=3,
-              fill='grey70')
-c.create_line(150, 150, 150, 50,
-              width=3)
-c.create_text(150, 30,
-              text="12",
-              font="Verdana 15")
-c.create_text(270, 150,
-              text="3",
-              font="Verdana 15")
-c.create_text(150, 270,
-              text="6",
-              font="Verdana 15")
-c.create_text(30, 150,
-              text="9",
-              font="Verdana 15")
-c.create_text(200, 50,
-              text="1",
-              font="Verdana 15")
-c.create_text(245, 90,
-              text="2",
-              font="Verdana 15")
-c.create_text(245, 210,
-              text="4",
-              font="Verdana 15")
-c.create_text(200, 250,
-              text="5",
-              font="Verdana 15")
-c.create_text(100, 250,
-              text="7",
-              font="Verdana 15")
-c.create_text(50, 210,
-              text="8",
-              font="Verdana 15")
-c.create_text(50, 90,
-              text="10",
-              font="Verdana 15")
-c.create_text(100, 50,
-              text="11",
-              font="Verdana 15")
+frame = Frame(root, height=400, width=400, bg='black', relief='sunken')
+frame.grid(column=0, row=0)
+
+canvas = Canvas(frame, bg='black', width=385, height=385, relief='raised', bd=10)
+canvas.grid(padx=5, pady=5)
+
+
+def some_time():
+    h = int(strftime('%H'))
+    m = int(strftime('%M'))
+    s = int(strftime('%S'))
+
+    hr = (h / 12) * 360
+    mi = (m / 60) * 360
+    se = (s / 60) * 360
+
+    track_time(hr, mi, se)
+    canvas.after(1000, some_time)
 
 
 
+def track_time(hr, mi, se):
+    canvas.create_oval(
+        50, 50, 350, 350,
+        fill='black',
+        outline='green2',
+        width=6,
+    )
 
-root=mainloop()
+numbers = [11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 12]
+
+for i in range(0, len(numbers)):
+    canvas.create_text(
+        200 - 120 * sin(((i + 1) * 2 * pi) / 12),
+        200 - 120 * cos(((i + 1) * 2 * pi) / 12),
+        text=numbers[i],
+        font=('Arial', 12, 'bold'),
+        fill='white'
+    )
+
+for y in range(60):
+    canvas.create_text(
+        200 - 140 * sin(((y + 1) * 2 * pi) / 60),
+        200 - 140 * cos(((y + 1) * 2 * pi) / 60),
+        text='•',
+        font=('Arial', 12, 'bold'),
+        fill='deep sky blue')
+
+for x in range(12):
+    canvas.create_text(
+        200 - 140 * sin(((x + 1) * 2 * pi) / 12),
+        200 - 140 * cos(((x + 1) * 2 * pi) / 12),
+        text='•',
+        font=('Arial', 25, 'bold'),
+        fill='red'
+    )
+
+    canvas.create_line(
+        200, 200,
+        200 + 60*sin(radians(hr)),
+        200 - 60*cos(radians(hr)),
+        fill='red',
+        width=9,
+        arrow= LAST
+    )
+    canvas.create_line(
+        200, 200,
+        200 + 80*sin(radians(mi)),
+        200 - 80*cos(radians(mi)),
+        fill='blue2',
+        width=6,
+        arrow= LAST
+    )
+    canvas.create_line(
+        200, 200,
+        200 + 120*sin(radians(se)),
+        200 - 120*cos(radians(se)),
+        fill='magenta2',
+        width=3,
+        arrow= LAST
+    )
+
+
+
+
+some_time()
+
+
+root.mainloop()
