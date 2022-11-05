@@ -1,100 +1,56 @@
-from tkinter import *
-from time import *
-from math import *
-root = Tk()
-root.geometry('420x420')
-root.config(bg='white')
-root.minsize(width=420, height=420)
 
-root.columnconfigure(0, weight=1)
-root.rowconfigure(0, weight=1)
+from kivy.app import App
 
-frame = Frame(root, height=400, width=400, bg='black', relief='sunken')
-frame.grid(column=0, row=0)
-
-canvas = Canvas(frame, bg='black', width=385, height=385, relief='raised', bd=10)
-canvas.grid(padx=5, pady=5)
-
-
-def some_time():
-    h = int(strftime('%H'))
-    m = int(strftime('%M'))
-    s = int(strftime('%S'))
-
-    hr = (h / 12) * 360
-    mi = (m / 60) * 360
-    se = (s / 60) * 360
-
-    track_time(hr, mi, se)
-    canvas.after(1000, some_time)
+from kivy.uix.label import Label
+from kivy.uix.gridlayout import GridLayout
+from kivy.uix.button import Button
+from kivy.uix.widget import Widget
+from kivy.uix.boxlayout import BoxLayout
 
 
 
-def track_time(hr, mi, se):
-    canvas.create_oval(
-        50, 50, 350, 350,
-        fill='black',
-        outline='green2',
-        width=6,
-    )
+class CalculatorApp(App):
+    def add_number(self, instance):
+        if (self.formula == "0"):
+            self.formula = ""
+        self.formula += str(instance.text)
+        print(self.formula)
 
-numbers = [11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 12]
+    def build(self):
+        self.formula = "0"
+        bl = BoxLayout(orientation ='vertical')
+        gl = GridLayout(cols = 4 )
+        bl.add_widget(Label(text="0"))
 
-for i in range(0, len(numbers)):
-    canvas.create_text(
-        200 - 120 * sin(((i + 1) * 2 * pi) / 12),
-        200 - 120 * cos(((i + 1) * 2 * pi) / 12),
-        text=numbers[i],
-        font=('Arial', 12, 'bold'),
-        fill='white'
-    )
+        gl.add_widget(Button(text="7", on_press = self.add_number))
+        gl.add_widget(Button(text="8"))
+        gl.add_widget(Button(text="9"))
+        gl.add_widget(Button(text="+"))
 
-for y in range(60):
-    canvas.create_text(
-        200 - 140 * sin(((y + 1) * 2 * pi) / 60),
-        200 - 140 * cos(((y + 1) * 2 * pi) / 60),
-        text='•',
-        font=('Arial', 12, 'bold'),
-        fill='deep sky blue')
+        gl.add_widget(Button(text="4"))
+        gl.add_widget(Button(text="5"))
+        gl.add_widget(Button(text="6"))
+        gl.add_widget(Button(text="-"))
 
-for x in range(12):
-    canvas.create_text(
-        200 - 140 * sin(((x + 1) * 2 * pi) / 12),
-        200 - 140 * cos(((x + 1) * 2 * pi) / 12),
-        text='•',
-        font=('Arial', 25, 'bold'),
-        fill='red'
-    )
+        gl.add_widget(Button(text="1"))
+        gl.add_widget(Button(text="2"))
+        gl.add_widget(Button(text="3"))
+        gl.add_widget(Button(text="*"))
 
-    canvas.create_line(
-        200, 200,
-        200 + 60*sin(radians(hr)),
-        200 - 60*cos(radians(hr)),
-        fill='red',
-        width=9,
-        arrow= LAST
-    )
-    canvas.create_line(
-        200, 200,
-        200 + 80*sin(radians(mi)),
-        200 - 80*cos(radians(mi)),
-        fill='blue2',
-        width=6,
-        arrow= LAST
-    )
-    canvas.create_line(
-        200, 200,
-        200 + 120*sin(radians(se)),
-        200 - 120*cos(radians(se)),
-        fill='magenta2',
-        width=3,
-        arrow= LAST
-    )
+        gl.add_widget(Button(text="c"))
+        gl.add_widget(Button(text="0"))
+        gl.add_widget(Button(text="/"))
+        gl.add_widget(Button(text="."))
+
+        gl.add_widget(Button())
+        gl.add_widget(Button(text="="))
+        gl.add_widget(Button(text="del"))
+        gl.add_widget(Button())
 
 
+        bl.add_widget(gl)
+        return bl
 
+if __name__ == "__main__":
+    CalculatorApp().run()
 
-some_time()
-
-
-root.mainloop()
